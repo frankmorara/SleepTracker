@@ -46,7 +46,7 @@ class SleepDatabaseTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         // Using an in-memory database because the information stored here disappears when the
         // process is killed.
-        db = Room.inMemoryDatabaseBuilder(context, SleepDatabase::class.java)
+        db = Room.inMemoryDatabaseBuilder(context   , SleepDatabase::class.java)
                 // Allowing main thread queries, just for testing.
                 .allowMainThreadQueries()
                 .build()
@@ -61,7 +61,7 @@ class SleepDatabaseTest {
 
     @Test
     @Throws(Exception::class)
-    fun insertAndGetNight() {
+    suspend fun insertAndGetNight() {
         val night = SleepNight()
         sleepDao.insert(night)
         val tonight = sleepDao.getTonight()
