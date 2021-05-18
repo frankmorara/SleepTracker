@@ -26,28 +26,15 @@ import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.formatNights
 import kotlinx.coroutines.*
 
-/**
- * ViewModel for SleepTrackerFragment.
- */
 class SleepTrackerViewModel(
         val database: SleepDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
-    /**
-     */
-
-    /**
-     *
-     *
-     */
 
     private var tonight = MutableLiveData<SleepNight?>()
 
     private val nights = database.getAllNights()
 
-    /**
-     * Converted nights to Spanned for displaying.
-     */
     val nightsString = Transformations.map(nights) { nights ->
         formatNights(nights, application.resources)
     }
@@ -62,13 +49,6 @@ class SleepTrackerViewModel(
         }
     }
 
-    /**
-     *  Handling the case of the stopped app or forgotten recording,
-     *  the start and end times will be the same.j
-     *
-     *  If the start time and end time are not the same, then we do not have an unfinished
-     *  recording.
-     */
     private suspend fun getTonightFromDatabase(): SleepNight? {
             var night = database.getTonight()
             if (night?.endTimeMilli != night?.startTimeMilli) {
@@ -90,9 +70,6 @@ class SleepTrackerViewModel(
             database.insert(night)
     }
 
-    /**
-     * Executes when the START button is clicked.
-     */
     fun onStartTracking() {
         viewModelScope.launch {
             // Create a new night, which captures the current time,
@@ -104,10 +81,6 @@ class SleepTrackerViewModel(
             tonight.value = getTonightFromDatabase()
         }
     }
-
-    /**
-     * Executes when the STOP button is clicked.
-     */
     fun onStopTracking() {
         viewModelScope.launch {
             // In Kotlin, the return@label syntax is used for specifying which function among
@@ -122,10 +95,6 @@ class SleepTrackerViewModel(
             update(oldNight)
         }
     }
-
-    /**
-     * Executes when the CLEAR button is clicked.
-     */
     fun onClear() {
         viewModelScope.launch {
             // Clear the database table.
@@ -136,7 +105,5 @@ class SleepTrackerViewModel(
         }
     }
 
-    /**
-     */
 }
 
